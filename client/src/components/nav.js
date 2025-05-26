@@ -1,13 +1,16 @@
+import React from "react"
+import { Link } from 'react-router-dom'
 
-const Nav = ()=> {
+
+const Nav = ()=>{
     return(
         <nav>
         <div className="nav-wrapper white">
-            <a href="#" className="brand-logo">PDX-fun</a>
+            <Link to="/" className="brand-logo">PDX-fun</Link>
             <ul id="nav-mobile" className="right">
-                <li><a href="/login">Login</a></li>
-                <li><a href="/signup">Sign up!</a></li>
-                <li><a href="/profile">Profile</a></li>
+                <li><Link to="/login">Login</Link></li>
+                <li><Link to="/signup">Sign up!</Link></li>
+                <li><Link to="/profile">Profile</Link></li>
             </ul>
         </div>
         </nav>

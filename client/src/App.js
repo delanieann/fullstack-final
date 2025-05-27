@@ -6,7 +6,7 @@ import Home from './components/pages/home'
 import Profile from './components/pages/profile'
 import Login from './components/pages/login'
 import Signup from './components/pages/signup'
-
+import Create from './components/pages/create'
 
 function App() {
   return (    
@@ -17,6 +17,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/create" element={<Create />} />
       </Routes>
     </BrowserRouter>
   );

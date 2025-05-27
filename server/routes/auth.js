@@ -57,7 +57,8 @@ router.post('/login', (req, res)=>{
             if(pw_bool){
                 //Password matches, success
                 const t = token.sign({_id:dbUser._id}, JWT)
-                res.json({token: t})
+                const { _id, name, email } = dbUser
+                res.json({token: t, user:{ _id, name, email }})
             }
             else {
                 res.statusCode(422).json({error: "Incorrect email or password. "})

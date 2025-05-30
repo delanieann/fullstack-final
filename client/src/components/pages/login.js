@@ -22,7 +22,7 @@ const Login = () => {
         nav("/");
       })
       .catch((err) => {
-        console.error("Signup error:", err);
+        console.error("Login error:", err);
       });
   };
   return (

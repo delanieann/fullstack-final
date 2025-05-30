@@ -16,7 +16,7 @@ router.get('/all', (req, res)=>{
 })
 
 router.post('/new', requireLogin, (req, res)=>{
-    const { title, description, date } = req.body
+    const { title, description, date, img } = req.body
     if(!title || !description || !date ){
         res.status(422).json({error: "Missing title, description or date. These elements are required. "})
         return
@@ -26,7 +26,8 @@ router.post('/new', requireLogin, (req, res)=>{
         title, 
         description, 
         author: req.user,
-        date
+        date,
+        img
     })
 
     event.save().then(result=>{

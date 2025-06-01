@@ -23,7 +23,7 @@ a {
   box-shadow: 0 0px 0 0;
 }
 
-.main-card {
+.all-card {
   margin: 5px auto;
   max-width: 400px;
   height: max-content;
@@ -44,4 +44,43 @@ a {
 .desc-textarea {
   border: 0px;
   max-height: 300px;
+}
+
+.profile-header {
+  margin: 10px 0px;
+}
+
+.likes-div {
+  display: flex;
+  justify-content: center;
+}
+
+.title-div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+}
+
+.title-div i {
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.circle-logo {
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+  overflow: hidden;
+  vertical-align: middle;
+}
+
+.circle-logo img {
+  height: 80px;
+  width: auto;
+  vertical-align: middle;
+}
+
+.brand-logo div {
+  vertical-align: middle;
 }

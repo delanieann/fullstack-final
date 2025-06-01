@@ -5,7 +5,7 @@ const User = mongoose.model("User")
 const bcryptjs = require('bcryptjs')
 const token = require('jsonwebtoken')
 const {JWT} = require('../keys')
-const requireLogin = require('../middlewear/requireLogin')
+const requireLogin = require('../middleware/requireLogin')
 
 
 router.get('/', (req,res)=>{

@@ -7,46 +7,51 @@ const Create = () => {
   const [descrip, setDescrip] = useState("");
   const [date, setDate] = useState("");
   const [img, setImg] = useState("");
-  const [url, setURL] = useState("");
 
   const PostImg = () => {
-    const data = new FormData();
-    data.append("file", img);
-    data.append("upload_preset", "pdx-fun");
-    data.append("cloud_name", "dnmvsnnab");
+    if (img) {
+      const data = new FormData();
+      data.append("file", img);
+      data.append("upload_preset", "pdx-fun");
+      data.append("cloud_name", "dnmvsnnab");
+
     fetch("https://api.cloudinary.com/v1_1/dnmvsnnab/image/upload", {
       method: "POST",
       body: data,
     })
-      .then((res) => res.json())
-      .then((data) => {
-        setURL(data.url);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-
-    fetch("/new", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        title,
-        description: descrip,
-        date,
-        photo: url,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        nav("/");
-      })
-      .catch((err) => {
-        console.error("Create post error:", err);
-      });
+    .then((res) => res.json())
+    .then((data) => {
+      postEvent(data.url);
+    }).catch(err=> {
+      console.error("Image upload: ", err)
+    });
+    } else {
+      postEvent("")
+    }
   };
 
+  const postEvent = (img_url) =>{
+      fetch("/new", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + localStorage.getItem("jwt"),
+        },
+        body: JSON.stringify({
+          title,
+          description: descrip,
+          date,
+          photo: img_url,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          nav("/");
+        })
+        .catch((err) => {
+          console.error("Create post error:", err);
+        });
+  };
   return (
     <div className="card input-filed create-card">
       <label for="title" className="create-label">
@@ -65,7 +70,7 @@ const Create = () => {
         Date
       </label>
       <input
-        type="date"
+        type="datetime-local"
         value={date}
         onChange={(event) => setDate(event.target.value)}
       />

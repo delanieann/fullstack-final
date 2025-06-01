@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
+import { UserContext } from "../../App";
 const Login = () => {
+    const {state, dispatch} = useContext(UserContext)
     const nav = useNavigate()
     const [password, setPassword] = useState("")
     const [email, setEmail] = useState("")
@@ -19,10 +20,13 @@ const Login = () => {
     })
       .then((res) => res.json())
       .then((data) => {
+        localStorage.setItem("jwt", data.token)
+        localStorage.setItem("user", JSON.stringify(data.user))
+        dispatch({type:"USER",payload:data.user})
         nav("/");
       })
       .catch((err) => {
-        console.error("Login error:", err);
+        console.log("Login error:", err);
       });
   };
   return (
@@ -36,7 +40,8 @@ const Login = () => {
           <label for="email" className="login-label">
             Email
           </label>
-          <input name="email" type="text" placeholder="Email" 
+          <input name="email" type="text" placeholder="Email"
+            autoComplete="username" 
             value={email}
               onChange={(event) => setEmail(event.target.value)}/>
           <br />
@@ -45,6 +50,7 @@ const Login = () => {
             Password
           </label>
           <input name="password" type="password" placeholder="Password"
+              autoComplete="current-password"
                       value={password}
               onChange={(event) => setPassword(event.target.value)}/>
 

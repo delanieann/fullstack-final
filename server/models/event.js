@@ -9,18 +9,19 @@ const eventSchema = new mongoose.Schema({
         type:String,
         required:true
     },
-    photo:{
-        type:String,
-        default:"None"
+    date:{
+        type:Date,
+        required:true
     },
     author:{
         type:ObjectId,
         ref:"User"
     },
-    date:{
-        type:Date,
-        required:true
-    }
+    photo:{
+        type:String
+    },
+    likes:[{type:ObjectId, ref:"User"}],
+
 })
 
 mongoose.model("Event", eventSchema)

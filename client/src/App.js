@@ -7,6 +7,7 @@ import Profile from './components/pages/profile'
 import Login from './components/pages/login'
 import Signup from './components/pages/signup'
 import Create from './components/pages/create'
+import Cal from './components/pages/calendar'
 import { initialState, reducer } from './components/reducer'
 
 export const UserContext = createContext()
@@ -27,10 +28,12 @@ const Routing = () =>{
   return (
   <Routes>
     <Route path="/" element={<Home />} />
+    <Route path="/home" element={<Home />} />
     <Route path="/signup" element={<Signup />} />
     <Route path="/login" element={<Login />} />
     <Route exact path="/profile" element={<Profile />} />
     <Route path="/create" element={<Create />} />
+    <Route path="/calendar" element={<Cal />} />
   </Routes>
   )};
 

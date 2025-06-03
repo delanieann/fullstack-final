@@ -1,18 +1,34 @@
 import React, { useState, useEffect, useContext } from "react";
 import { UserContext } from "../../App";
+import { useLocation } from "react-router-dom";
 
 const Home = () => {
-  const [data, setData] = useState([]);
-  const { state, dispatch } = useContext(UserContext);
+  const { state } = useContext(UserContext);
+  const [filteredEvents, setFilteredEvents] = useState([]);
+  const location = useLocation()
 
   useEffect(() => {
     fetch("/all")
       .then((res) => res.json())
       .then((result) => {
-        console.log(result);
-        setData(result.events);
+        const posts = result.events
+        console.log("Fetched posts:", posts);
+
+        const params = new URLSearchParams(location.search);
+        const dateParam = params.get("date");
+        
+        if (dateParam) {
+          const filterDate = new Date(dateParam);
+          const matches = posts.filter((event) => {
+            const eventDate = new Date(event.date);
+            return eventDate >= filterDate;
+          });
+          setFilteredEvents(matches);
+        } else {
+          setFilteredEvents(posts);
+        }
       });
-  }, []);
+  }, [location.search]);
 
   const Like = (id) => {
     fetch("/like", {
@@ -27,12 +43,11 @@ const Home = () => {
     })
       .then((res) => res.json())
       .then((result) => {
-        const newData = data.map((item) => {
+        const updated = filteredEvents.map((item) => {
           return item._id === result._id ? result : item;
         });
-        setData(newData);
+        setFilteredEvents(updated)
       })
-      .catch((err) => console.log(err));
   };
 
   const Dislike = (id) => {
@@ -48,17 +63,17 @@ const Home = () => {
     })
       .then((res) => res.json())
       .then((result) => {
-        const newData = data.map((item) => {
+        const updated = filteredEvents.map((item) => {
           return item._id === result._id ? result : item;
         });
-        setData(newData);
+        setFilteredEvents(updated)
       })
-      .catch((err) => console.log(err));
   };
 
   return (
+    <div className="home-div">
     <div className="all">
-      {data.map((event) => {
+      {filteredEvents.map((event) => {
         return (
           <div className="card all-card" key={event._id}>
             <h5>{event.title}</h5>
@@ -70,7 +85,7 @@ const Home = () => {
               />
             </div>
             <div className="card-content description">
-              <h6>{event.date}</h6>
+              <h6>{event.date} {event.time}</h6>
               <h7>Hosted by: {event.author.name}</h7>
               <p>{event.description}</p>
               <br />
@@ -96,6 +111,7 @@ const Home = () => {
           </div>
         );
       })}
+    </div>
     </div>
   );
 };

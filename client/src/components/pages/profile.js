@@ -3,7 +3,7 @@ import { UserContext } from "../../App";
 
 const Profile = () => {
   const [data, setData] = useState([]);
-  const { state, dispatch } = useContext(UserContext);
+  const { state } = useContext(UserContext);
 
   useEffect(() => {
     fetch("/history", {
@@ -13,8 +13,8 @@ const Profile = () => {
     })
       .then((res) => res.json())
       .then((result) => {
-        if (Array.isArray(result.history)) {
-          setData(result.history);
+        if (Array.isArray(result.data)) {
+          setData(result.data);
         } else {
           setData([]);
         }
@@ -68,7 +68,7 @@ const Profile = () => {
               />
             </div>
             <div className="card-content description">
-              <h6>{history.date}</h6>
+              <h6>{history.date} {history.time}</h6>
               <p>{history.description}</p>
               <br />
 

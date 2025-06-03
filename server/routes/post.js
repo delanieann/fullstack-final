@@ -17,38 +17,40 @@ router.get('/all', async (req, res) => {
   }
 });
 
-router.post('/new', requireLogin, (req, res)=>{
-    const { title, description, date, photo } = req.body
-    if(!title || !description || !date ){
-        res.status(422).json({error: "Missing title, description or date. These elements are required. "})
-        return
-    }
-    req.user.password = undefined
-    const event = new Event({
-        title, 
-        description, 
-        author: req.user,
-        date,
-        photo
-    })
+router.post('/new', requireLogin, async (req, res)=>{
+    const { title, description, date, time, photo } = req.body
 
-    event.save().then(result=>{
-        res.json({event: result})
-    })
-    .catch(err=>{
-        console.log(err)
-    })
+    if(!title || !description || !date || !time ){
+        return res.status(422).json({error: "Missing title, description or date."})
+    }
+    try{ 
+        req.user.password = undefined
+
+        const event = new Event({
+            title, 
+            description, 
+            author: req.user,
+            date,
+            time,
+            photo
+        })
+
+    const result = await event.save()
+    res.json({event: result})
+    } catch (er) {
+        res.status(500).json({error: "Failed to post. "})
+    }
 })
 
-router.get('/history', requireLogin, (req, res)=>{
-    Event.find({author: req.user._id })
-    .populate("author", "_id name")
-    .then(history=>{
-        res.json({history})
-    })
-    .catch(err=>{
-        console.log(err)
-    })
+router.get('/history', requireLogin, async (req, res)=>{
+    try {
+        const data = await Event.find({author: req.user._id })
+        .populate("author", "_id name")
+        .sort({ date: 1 });
+        res.json({ data })
+    } catch(err) {
+        res.status(500).json({error: "Failed to get history. "})
+    }
 })
 
 router.put('/like', requireLogin, async (req, res)=>{
@@ -89,7 +91,7 @@ router.delete('/delete/:eventId', requireLogin, async (req, res) => {
       return res.status(403).json({ error: "Unauthorized" });
     }
 
-    const result = await event.deleteOne(); // `remove()` is deprecated
+    const result = await event.deleteOne();
     return res.json(result);
 
   } catch (err) {
@@ -97,6 +99,5 @@ router.delete('/delete/:eventId', requireLogin, async (req, res) => {
     return res.status(500).json({ error: err.message });
   }
 });
-
 
 module.exports = router

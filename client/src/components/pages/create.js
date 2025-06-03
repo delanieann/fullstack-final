@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 
 const Create = () => {
-  const nav = useNavigate()
+  const nav = useNavigate();
   const [title, setTitle] = useState("");
   const [descrip, setDescrip] = useState("");
+  const [datetime, setDatetime] = useState("")
   const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
   const [img, setImg] = useState("");
 
   const PostImg = () => {
@@ -15,42 +17,44 @@ const Create = () => {
       data.append("upload_preset", "pdx-fun");
       data.append("cloud_name", "dnmvsnnab");
 
-    fetch("https://api.cloudinary.com/v1_1/dnmvsnnab/image/upload", {
-      method: "POST",
-      body: data,
-    })
-    .then((res) => res.json())
-    .then((data) => {
-      postEvent(data.url);
-    }).catch(err=> {
-      console.error("Image upload: ", err)
-    });
-    } else {
-      postEvent("")
-    }
-  };
-
-  const postEvent = (img_url) =>{
-      fetch("/new", {
+      fetch("https://api.cloudinary.com/v1_1/dnmvsnnab/image/upload", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer " + localStorage.getItem("jwt"),
-        },
-        body: JSON.stringify({
-          title,
-          description: descrip,
-          date,
-          photo: img_url,
-        }),
+        body: data,
       })
         .then((res) => res.json())
         .then((data) => {
-          nav("/");
+          postEvent(data.url);
         })
         .catch((err) => {
-          console.error("Create post error:", err);
+          console.error("Image upload: ", err);
         });
+    } else {
+      postEvent("");
+    }
+  };
+
+  const postEvent = (img_url) => {
+    fetch("/new", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("jwt"),
+      },
+      body: JSON.stringify({
+        title,
+        description: descrip,
+        date: new Date(date),
+        time,
+        photo: img_url,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        nav("/");
+      })
+      .catch((err) => {
+        console.error("Create post error:", err);
+      });
   };
   return (
     <div className="card input-filed create-card">
@@ -71,9 +75,17 @@ const Create = () => {
       </label>
       <input
         type="datetime-local"
-        value={date}
-        onChange={(event) => setDate(event.target.value)}
+        value={datetime}
+        onChange={(e) => {
+          const dt = new Date(e.target.value);
+          if (!isNaN(dt)) {
+            setDate(dt.toISOString().split("T")[0]); // "YYYY-MM-DD"
+            setTime(dt.toTimeString().slice(0, 5)); // "HH:MM"
+            setDatetime(e.target.value); // Original full string if needed
+          }
+        }}
       />
+
       <br />
 
       <label for="photo" className="create-label">

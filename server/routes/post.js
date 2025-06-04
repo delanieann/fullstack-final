@@ -6,10 +6,16 @@ const Event = mongoose.model("Event")
 
 router.get('/all', async (req, res) => {
   try {
-    const now = new Date()
+    const now = new Date();
+    const skip = parseInt(req.query.skip) || 0;
+    const limit = parseInt(req.query.limit) || 5;
+
     const events = await Event.find({date: {$gte:now }})
       .populate("author", "_id name")
-      .sort({ date: 1 }); 
+      .sort({ date: 1 })
+      .skip(skip)
+      .limit(limit);
+    
     res.json({ events });
   } catch (err) {
     console.log(err);
@@ -59,7 +65,7 @@ router.put('/like', requireLogin, async (req, res)=>{
       req.body.postId,
       { $push: { likes: req.user._id } },
       { new: true }
-    );
+    ).populate("author", "_id name");
     res.json(result);
   } catch (err) {
     res.status(422).json({ error: err.message });
@@ -72,7 +78,7 @@ router.put('/dislike', requireLogin, async (req, res)=>{
       req.body.postId,
       { $pull: { likes: req.user._id } },
       { new: true }
-    );
+    ).populate("author", "_id name");
     res.json(result);
   } catch (err) {
     res.status(422).json({ error: err.message });

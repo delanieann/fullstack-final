@@ -1,34 +1,67 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext} from "react";
 import { UserContext } from "../../App";
 import { useLocation } from "react-router-dom";
 
 const Home = () => {
   const { state } = useContext(UserContext);
-  const [filteredEvents, setFilteredEvents] = useState([]);
+  const [events, setEvents] = useState([]);
+  const [skip, setSkip] = useState(0)
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
   const location = useLocation()
 
-  useEffect(() => {
-    fetch("/all")
-      .then((res) => res.json())
-      .then((result) => {
-        const posts = result.events
-        console.log("Fetched posts:", posts);
+  const LIMIT = 5
+  
+  const fetchEvents = async (reset = false)=> {
+    if (loading || (!hasMore && !reset)) return;
 
-        const params = new URLSearchParams(location.search);
-        const dateParam = params.get("date");
-        
-        if (dateParam) {
-          const filterDate = new Date(dateParam);
-          const matches = posts.filter((event) => {
-            const eventDate = new Date(event.date);
-            return eventDate >= filterDate;
-          });
-          setFilteredEvents(matches);
-        } else {
-          setFilteredEvents(posts);
-        }
-      });
+    setLoading(true);
+    const newSkip = reset ? 0 : skip;
+
+    try {
+      const params = new URLSearchParams(location.search);
+      const dateParam = params.get("date")
+      const queryString = dateParam 
+        ? `?date=${dateParam}&skip=${newSkip}&limit=${LIMIT}` 
+        : `?skip=${newSkip}&limit=${LIMIT}`;
+
+      const res = await fetch(`/all${queryString}`)
+      const result = await res.json();
+
+      const fetchedEvents = result.events || [];
+
+      if (reset) {
+        setEvents(fetchedEvents);
+        setSkip(fetchedEvents.length);
+        setHasMore(fetchedEvents.length === LIMIT);
+      } else {
+        setEvents((prev) => [...prev, ...fetchedEvents]);
+        setSkip((prev) => prev + fetchedEvents.length);
+        if (fetchedEvents.length < LIMIT) setHasMore(false);
+      }
+    } catch (err) {
+      console.error("Fetch error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchEvents(true); // reset = true
   }, [location.search]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.innerHeight + window.scrollY + 50 >= document.documentElement.scrollHeight  &&
+        hasMore &&
+        !loading) {
+          fetchEvents(false); // load more
+        }
+    };
+  
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [hasMore, loading, skip]);
 
   const Like = (id) => {
     fetch("/like", {
@@ -43,10 +76,10 @@ const Home = () => {
     })
       .then((res) => res.json())
       .then((result) => {
-        const updated = filteredEvents.map((item) => {
+        const updated = events.map((item) => {
           return item._id === result._id ? result : item;
         });
-        setFilteredEvents(updated)
+        setEvents(updated)
       })
   };
 
@@ -63,19 +96,19 @@ const Home = () => {
     })
       .then((res) => res.json())
       .then((result) => {
-        const updated = filteredEvents.map((item) => {
+        const updated = events.map((item) => {
           return item._id === result._id ? result : item;
         });
-        setFilteredEvents(updated)
+        setEvents(updated)
       })
   };
 
   return (
     <div className="home-div">
     <div className="all">
-      {filteredEvents.map((event) => {
+      {events.map((event, index) => {
         return (
-          <div className="card all-card" key={event._id}>
+          <div className="card all-card" key={event._id} >
             <h5>{event.title}</h5>
             <div className="card-image">
               <img
@@ -86,7 +119,7 @@ const Home = () => {
             </div>
             <div className="card-content description">
               <h6>{event.date} {event.time}</h6>
-              <h7>Hosted by: {event.author.name}</h7>
+              <h6>Hosted by: {event.author.name}</h6>
               <p>{event.description}</p>
               <br />
               <div className="likes-div">

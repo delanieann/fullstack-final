@@ -1,7 +1,6 @@
 import React, { useContext } from "react"
 import { Link } from 'react-router-dom'
 import { UserContext } from "../App"
-//import flag from "./images/pdx-logo.png"
 
 
 const Nav = ()=>{
@@ -25,9 +24,10 @@ const Nav = ()=>{
     }
     return(
         <nav>
-        <div className="nav-wrapper white">
-            <Link to="/" className="brand-logo">
-            <div>PDX-fun</div></Link>
+        <div className="nav-wrapper">
+            <Link to="/" className="brand-logo left">
+            <div>PDX-fun</div>
+            </Link>
             <ul id="nav-mobile" className="right">
                 <li><Link to="/calendar">Calendar</Link></li>,
                 {login_nav()}

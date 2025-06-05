@@ -5,7 +5,7 @@ const Create = () => {
   const nav = useNavigate();
   const [title, setTitle] = useState("");
   const [descrip, setDescrip] = useState("");
-  const [datetime, setDatetime] = useState("")
+  const [datetime, setDatetime] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [img, setImg] = useState("");
@@ -57,80 +57,84 @@ const Create = () => {
       });
   };
   return (
-    <div className="card input-filed create-card">
-      <label for="title" className="create-label">
-        Event Name
-      </label>
-      <input
-        type="text"
-        placeholder="Event name"
-        name="title"
-        value={title}
-        onChange={(event) => setTitle(event.target.value)}
-      />
-      <br />
+    <div className="create-div">
+      <div className="card input-filed create-card">
+        <h5>Add your next event!</h5>
+        <br />
+        <label for="title" className="create-label">
+          Event Name
+        </label>
+        <input
+          type="text"
+          placeholder="Event name"
+          name="title"
+          value={title}
+          onChange={(event) => setTitle(event.target.value)}
+        />
+        <br />
 
-      <label for="date" className="create-label">
-        Date
-      </label>
-      <input
-        type="datetime-local"
-        value={datetime}
-        onChange={(e) => {
-          const dt = new Date(e.target.value);
-          if (!isNaN(dt)) {
-            setDate(dt.toISOString().split("T")[0]); // "YYYY-MM-DD"
-            setTime(dt.toTimeString().slice(0, 5)); // "HH:MM"
-            setDatetime(e.target.value); // Original full string if needed
-          }
-        }}
-      />
+        <label for="date" className="create-label">
+          Date
+        </label>
+        <input
+          type="datetime-local"
+          value={datetime}
+          onChange={(e) => {
+            const dt = new Date(e.target.value);
+            if (!isNaN(dt)) {
+              setDate(dt.toISOString().split("T")[0]); // "YYYY-MM-DD"
+              setTime(dt.toTimeString().slice(0, 5)); // "HH:MM"
+              setDatetime(e.target.value); // Original full string if needed
+            }
+          }}
+        />
 
-      <br />
+        <br />
 
-      <label for="photo" className="create-label">
-        Photos
-      </label>
-      <form action="#">
-        <div className="file-field input-field">
-          <div className="btn waves-effect waves-light green lighten-1">
-            <span>File</span>
-            <input
-              type="file"
-              multiple={false}
-              onChange={(event) => setImg(event.target.files[0])}
-            />{" "}
+        <label for="photo" className="create-label">
+          Photos
+        </label>
+        <form action="#">
+          <div className="file-field input-field">
+            <div className="btn waves-effect waves-light green lighten-1">
+              <span>File</span>
+              <input
+                type="file"
+                multiple={false}
+                onChange={(event) => setImg(event.target.files[0])}
+              />{" "}
+            </div>
+            <div className="file-path-wrapper">
+              <input
+                className="file-path validate"
+                type="text"
+                value={img.name || ""}
+              />
+            </div>
           </div>
-          <div className="file-path-wrapper">
-            <input
-              className="file-path validate"
-              type="text"
-              value={img.name || ""}
-            />
-          </div>
-        </div>
-      </form>
+        </form>
 
-      <label for="description" className="create-label">
-        Details
-      </label>
+        <label for="description" className="create-label">
+          Details
+        </label>
 
-      <textarea
-        id="description"
-        name="description"
-        placeholder="Description of your event."
-        className="desc-textarea"
-        value={descrip}
-        onChange={(event) => setDescrip(event.target.value)}
-      />
+        <textarea
+          id="description"
+          name="description"
+          placeholder="Description of your event."
+          className="desc-textarea"
+          value={descrip}
+          onChange={(event) => setDescrip(event.target.value)}
+        />
 
-      <br />
-      <button
-        className="btn waves-effect waves-light green lighten-1 submit-btn"
-        onClick={PostImg}
-      >
-        Post Event
-      </button>
+        <br />
+        <button
+          className="btn waves-effect waves-light green lighten-1 submit-btn"
+          onClick={PostImg}
+        >
+          Post Event
+        </button>
+      </div>
     </div>
   );
 };

@@ -30,9 +30,10 @@ const Signup = () => {
       });
   };
   return (
-    <div className="signup-card">
-      <div className="card signup">
-        <h2>Join PDX.FUN</h2>
+    <div className="signup-div">
+      <div className="card signup-card">
+        <h5>Join PDX.FUN</h5>
+        <br />
         <form>
           <div role="form" id="signup-form" aria-label="Sign up for PDX.fun">
             <label for="name" className="name-label">
@@ -77,9 +78,9 @@ const Signup = () => {
               Sign Up
             </button>
             <br />
-            <h5>
+            <p>
               Already have an account? <Link to="/login">Log in.</Link>
-            </h5>
+            </p>
           </div>
         </form>
       </div>

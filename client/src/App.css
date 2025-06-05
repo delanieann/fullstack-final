@@ -6,13 +6,6 @@ a {
   color: black !important;
 }
 
-.login, .signup{
-  padding: 20px;
-  text-align: center;
-  max-width: 400px;
-  margin: 10px auto;
-}
-
 .login-label,
 .password-label,
 .name-label,
@@ -27,20 +20,12 @@ a {
   box-shadow: 0 0px 0 0;
 }
 
-.all-card {
+.all-card, .create-card, .login-card, .signup-card  {
   border-radius: 25px;
-  margin: 20px;
-  max-width: 600px;
+  width: 600px;
+  max-width: 100%;
   height: max-content;
   padding: 25px;
-}
-
-
-.create-card {
-  margin: 40px auto;
-  max-width: 500px;
-  padding: 30px;
-  text-align: left;
 }
 
 .submit-btn {
@@ -53,9 +38,6 @@ a {
   max-height: 300px;
 }
 
-.profile-header {
-  margin: 10px 0px;
-}
 
 .likes-div {
   display: flex;
@@ -74,16 +56,34 @@ a {
   cursor: pointer;
 }
 
-.home-div {
+.home-div, .history, .create-div, .login-div, .signup-div {
   margin-top: 70px;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-#calendar {
-  position: fixed;
-  margin: 20px 0;
+.calendar-page {
+  width: 600px;
+  margin-top: 70px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 20px;
+}
+
+.react-calendar { 
+  width: 100% !important;
+  padding: 20px;
+  border-radius: 25px;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+ }
+
+ .react-calendar__navigation button:hover,
+.react-calendar__navigation button:enabled:hover {
+  background-color: transparent !important;
+  color: inherit !important;
+  box-shadow: none !important;
 }
 
 nav .nav-wrapper {

@@ -106,6 +106,14 @@ const Home = () => {
       });
   };
 
+  const formatTime = (time) => {
+    const [hour, minute] = time.split(":");
+    const date = new Date();
+    date.setHours(+hour);
+    date.setMinutes(+minute);
+    return date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+  };
+
   return (
     <div className="home-div">
       <div className="all">
@@ -118,11 +126,17 @@ const Home = () => {
                   src={
                     event.photo || "https://placehold.co/400x200?text=No+Image"
                   }
+                  alt={event.title}
                 />
               </div>
               <div className="card-content description">
                 <h6>
-                  {event.date} {event.time}
+                  {new Date(event.date).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}{" "}
+                  at {formatTime(event.time)}
                 </h6>
                 <h6>Hosted by: {event.author.name}</h6>
                 <p>{event.description}</p>

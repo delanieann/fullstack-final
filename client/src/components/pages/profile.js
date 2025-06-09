@@ -37,6 +37,15 @@ const Profile = () => {
         setData(newData);
       });
   };
+
+  const formatTime = (time) => {
+    const [hour, minute] = time.split(":");
+    const date = new Date();
+    date.setHours(+hour);
+    date.setMinutes(+minute);
+    return date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+  };
+  
   return (
     <div className="history">
       <div className="profile-header">
@@ -71,7 +80,12 @@ const Profile = () => {
             </div>
             <div className="card-content description">
               <h6>
-                {history.date} {history.time}
+              {new Date(history.date).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}{" "}
+                  at {formatTime(history.time)}
               </h6>
               <p>{history.description}</p>
               <br />

@@ -16,11 +16,17 @@ Application for sharing events in Portland, Oregon.
 
 ## Structure
 client/
+
     src/components
+
     App.js
+
 server/
+
     routes/
+    
     models/
+    
     middlware/
 
 ## Setup

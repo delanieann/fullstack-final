@@ -33,7 +33,7 @@ Set up the server
 ```bash
 cd server
 npm install
-npm start
+node app
 ```
 
 Set up the client
